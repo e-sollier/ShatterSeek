@@ -59,12 +59,33 @@ statistical_criteria = function(input, genome){
             v_3states = 1*(abs(v) %in% c(0,1))
             v = 1*(v ==0)
             #i_i2 = fmax(1,v)
-            number_CN_segments = length(v)
+            number_CN_segments = length(v) +2 
             max_number_oscillating_CN_segments_2_states = fmaxmax(1,v) #XXX
-            max_number_oscillating_CN_segments_3_states = fmaxmax(1,v_3states) #XXX
+
+            ## 3 states
+            # Find all copy number states
+            all_cn_states=c()
+            for (cn in SNVsnow$total_cn){
+                if (! cn %in% all_cn_states){
+                    all_cn_states = c(all_cn_states,cn)
+                }
+            }
+            if (length(all_cn_states)<=2){
+                max_number_oscillating_CN_segments_3_states = max_number_oscillating_CN_segments_2_states_chr
+            }
+            else{
+                # Enumerate all combinations of 3 states, and find the one leading to the highest number of contiguous oscillations
+                three_states_combinations = combn(all_cn_states,3)
+                max_number_oscillating_CN_segments_3_states = 0
+                for (j in ncol(three_states_combinations)){
+                    v_3states = 1*(CNVsnow$total_cn %in% three_states_combinations[,j])
+                    max_number_oscillating_CN_segments_3_states = max(max_number_oscillating_CN_segments_3_states, fmaxmax(1,v_3states))
+                }
+            }
+
             summary$number_CN_segments_chr[index_chromosome] = number_CN_segments
             summary$max_number_oscillating_CN_segments_2_states_chr[index_chromosome] = max_number_oscillating_CN_segments_2_states + 2
-            summary$max_number_oscillating_CN_segments_3_states_chr[index_chromosome] = max_number_oscillating_CN_segments_3_states + 2
+            summary$max_number_oscillating_CN_segments_3_states_chr[index_chromosome] = max_number_oscillating_CN_segments_3_states 
         }
 
         if(nrow(SVsnow) !=0){
