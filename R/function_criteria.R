@@ -65,7 +65,7 @@ statistical_criteria = function(input, genome){
             ## 3 states
             # Find all copy number states
             all_cn_states=c()
-            for (cn in SNVsnow$total_cn){
+            for (cn in CNVsnow$total_cn){
                 if (! cn %in% all_cn_states){
                     all_cn_states = c(all_cn_states,cn)
                 }
