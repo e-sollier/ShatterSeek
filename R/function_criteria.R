@@ -77,7 +77,7 @@ statistical_criteria = function(input, genome){
                 # Enumerate all combinations of 3 states, and find the one leading to the highest number of contiguous oscillations
                 three_states_combinations = combn(all_cn_states,3)
                 max_number_oscillating_CN_segments_3_states = 0
-                for (j in ncol(three_states_combinations)){
+                for (j in 1:ncol(three_states_combinations)){
                     v_3states = 1*(CNVsnow$total_cn %in% three_states_combinations[,j])
                     max_number_oscillating_CN_segments_3_states = max(max_number_oscillating_CN_segments_3_states, fmaxmax(1,v_3states))
                 }
